@@ -6,7 +6,7 @@
                  :points 1}
   answer => 42)
 
-(facts "hai" {:exercise 5
+(facts "hai" {:exercise 6
                :points 1}
   hai => "OH HAI!")
 
