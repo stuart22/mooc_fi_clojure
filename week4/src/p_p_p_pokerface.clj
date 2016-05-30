@@ -27,7 +27,7 @@
   (= 2 (apply min (vals (frequencies (map rank hand))))))
 
 (defn two-pairs? [hand]
-  (and (= 2 (apply max (vals (frequencies (vals (frequencies (map rank hand)))))))
+  (and (= 2 (apply max (vals (frequencies (vals (frequencies (map rank hand)))))))quot
        (= 2 (apply max (keys (frequencies (vals (frequencies (map rank hand)))))))
           ))
 
@@ -45,11 +45,12 @@
   (and (straight? hand) (flush? hand)))
 
 (defn value [hand]
-  (if (straight-flush? hand) 8
-     (if (four-of-a-kind? hand) 7
-        (if (full-house? hand) 6
-            (if (flush? hand) 5
-                (if (straight? hand) 4
-                   (if (three-of-a-kind? hand) 3
-                       (if (two-pairs? hand) 2
-                           (if (pair? hand) 1 0 )))))))))
+  (cond (straight-flush? hand) 8
+        (four-of-a-kind? hand) 7
+        (full-house? hand) 6
+        (flush? hand) 5
+        (straight? hand) 4
+        (three-of-a-kind? hand) 3
+        (two-pairs? hand) 2
+        (pair? hand) 1
+        :else 0 ))
