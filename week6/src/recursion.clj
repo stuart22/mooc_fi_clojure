@@ -86,22 +86,27 @@
   (cond (> (count a-seq) 0) ( a-seq  (tails(rest a-seq)))))
 
 (defn inits [a-seq]
-  [:-])
+  "")
 
 (defn rotations [a-seq]
-  [:-])
+  (reverse a-seq) (a-seq) )
 
 (defn my-frequencies-helper [freqs a-seq]
-  [:-])
+  (if (empty? a-seq) freqs
+    (let [new-count (if (= (first a-seq))
+                      (inc freqs)
+                      freqs)]
+      (my-frequencies-helper new-count
+                         (rest a-seq)))))
 
 (defn my-frequencies [a-seq]
-  [:-])
+  (my-frequencies-helper {} a-seq))
 
 (defn un-frequencies [a-map]
   [:-])
 
 (defn my-take [n coll]
-  [:-])
+  (cond (> n 0 ) (cons (nth coll (dec n)) (my-take n coll))))
 
 (defn my-drop [n coll]
   [:-])
