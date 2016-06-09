@@ -123,7 +123,11 @@
           :else (recur (conj blocks-vec (block-freq board (get blockref ref))) (inc ref)))))
                                                                   
 (defn valid-blocks? [board]
-  (and (not(contains? (concsets (blocks board)) 0)) (and  (not(contains? (concsets (blocks-f board)) 2)) (not(contains? (concsets (blocks-f board)) 3)))))
+  (and (not(contains? (concsets (blocks board)) 0))
+       (and  (loop [num 2]
+               (cond (contains? (concsets (blocks-f board)) num) false
+                     (= num 10)                                        true
+                     :else                                             (recur (inc num)))))))
 
 (defn valid-solution? [board]
   (and (valid-blocks? board) (and (valid-rows? board)) (valid-cols? board)))
@@ -132,11 +136,17 @@
   (assoc-in board coord new-value))
 
 (defn find-empty-point [board]
-  (loop [c 0 r 0]
-    (cond (not (has-value? board [r c])) [r c]
-          :else (recur (inc c) (loop [c 0]
-                                 (cond (not (has-value? board [r c])) c
-                                       (not (= 9 c)) (inc r)
-                                            :else (recur (inc c))))))))
+  (let [all-coords
+        (for [c (range 0 8)
+              r (range 0 8)]
+          (if (not (has-value? board [r c]))
+            [r c]
+            nil))]
+   (first (filter some? all-coords))))
+        
+
 (defn solve [board]
-  nil)
+  (let [point (find-empty-point board)
+        solutions (map #(solve (set-value-at board point %)) (valid-values-for board point))]
+    #break (filter valid-solution? solutions)))
+    
