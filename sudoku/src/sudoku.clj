@@ -146,7 +146,11 @@
         
 
 (defn solve [board]
-  (let [point (find-empty-point board)
-        solutions (map #(solve (set-value-at board point %)) (valid-values-for board point))]
-    #break (filter valid-solution? solutions)))
+  (if (filled? board)
+      (if (not(valid-solution? board))
+          '()
+          [board])    
+      (let [point (find-empty-point board)
+           solutions (map #(solve (set-value-at board point %)) (valid-values-for board point))]
+         (filter valid-solution? solutions))))
     
