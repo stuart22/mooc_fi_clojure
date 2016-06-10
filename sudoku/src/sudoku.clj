@@ -4,13 +4,26 @@
 
 (def board identity)
 
+(def my-sudoku-board
+  (board [[5 3 0 0 7 0 0 0 0]
+          [6 0 0 1 9 5 0 0 0]
+          [0 9 8 0 0 0 0 6 0]
+          [8 0 0 0 6 0 0 0 3]
+          [4 0 0 8 0 3 0 0 1]
+          [7 0 0 0 2 0 0 0 6]
+          [0 6 0 0 0 0 2 8 0]
+          [0 0 0 4 1 9 0 0 5]
+          [0 0 0 0 8 0 0 7 9]]))
+
 (def all-values #{1 2 3 4 5 6 7 8 9})
 
 (defn value-at [board coord]
   (get-in board coord))
 
 (defn has-value? [board coord]
-  (not (zero? (value-at board coord))))
+  (not (zero? (value-at
+               board
+               coord))))
 
 (defn row-values [board coord]
   (let [[row col] coord]
@@ -137,8 +150,8 @@
 
 (defn find-empty-point [board]
   (let [all-coords
-        (for [c (range 0 8)
-              r (range 0 8)]
+        (for [c (range 9)
+              r (range 9)]
           (if (not (has-value? board [r c]))
             [r c]
             nil))]
@@ -147,10 +160,8 @@
 
 (defn solve [board]
   (if (filled? board)
-      (if (not(valid-solution? board))
-          '()
-          [board])    
-      (let [point (find-empty-point board)
-           solutions (map #(solve (set-value-at board point %)) (valid-values-for board point))]
-         (filter valid-solution? solutions))))
+    (if (valid-solution? board) board [])
+    (let [point     (find-empty-point board)
+          solutions (map #(solve (set-value-at board point %)) (valid-values-for board point))]
+      (first (filter #(not (empty? %)) solutions)))))
     
